@@ -43,3 +43,128 @@ change the current directory by running the command; cd Todo
 Next is to use the command npm init to initialise the project so that a new file named package.json wil be created
 
 npm init
+
+npminit.png 
+
+run the ls command to confirm that you have package.json 
+
+packagejson.png 
+
+the next thing we will do is to install expressjs and create thr routes directory
+
+express is a framework for node.js. to install express, install using npm
+
+npm install express
+
+installexpress.png 
+
+to also a create a file index.js; run : touch index.js
+
+to install dotenv: run: npm install dotenv
+
+to populate the index.js file; open vim index.js; type the code below into it:
+
+const express = require('express');
+require('dotenv').config();
+
+const app = express();
+
+const port = process.env.PORT || 5000;
+
+app.use((req, res, next) => {
+res.header("Access-Control-Allow-Origin", "\*");
+res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+next();
+});
+
+app.use((req, res, next) => {
+res.send('Welcome to Express');
+});
+
+app.listen(port, () => {
+console.log(`Server running on port ${port}`)
+});
+
+
+Notice that port b500 was specified in the code, this will be required in the when we go on the browser
+
+type: node index.js
+
+nodeindexjs.png 
+
+open port 5000 on EC2 security
+
+port5000
+
+open up your browser and try to access your server's public IP followed by port 500
+
+http://<PublicIP-or-PublicDNS>:5000
+
+welcomeexp.png     
+
+there are 3 actions that our to-do application needs to be able to do: Create a new task, Display list of all tasks, Delete a completed task
+
+for each task, we need to create routes that will define various endpoints that the to-do app will depend on.
+
+to create routes: mkdir routes
+
+change directory to routes folder by running command; cd routes 
+
+create a file api.js with the command ;
+
+touch api.js
+
+open the file with the command; vim api.js
+
+copy the below code into it
+
+const express = require ('express');
+const router = express.Router();
+
+router.get('/todos', (req, res, next) => {
+
+});
+
+router.post('/todos', (req, res, next) => {
+
+});
+
+router.delete('/todos/:id', (req, res, next) => {
+
+})
+
+module.exports = router;
+
+
+cdroutes.png 
+
+since the app is going to make use of mongodb which is a NoSQL database, we need to create a model.
+
+a model is at the heart of javascript based applications, and it is what makes it interactive
+
+to create a schema and a model, install mongoose which is anode.js package that makes working with mongodb easier
+
+run; npm install mongoose - in the to-do folder - cd .. into todo folder
+
+create a new folder - mkdir models
+
+inside the models folder, create a file and name it todo.js; run command - touch <todo class="js">
+
+Open the file created with vim todo.js then paste the code below in the file:    
+
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+//create schema for todo
+const TodoSchema = new Schema({
+action: {
+type: String,
+required: [true, 'The todo text field is required']
+}
+})
+
+//create model for todo
+const Todo = mongoose.model('todo', TodoSchema);
+
+module.exports = Todo;
+
