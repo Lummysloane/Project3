@@ -4,3 +4,42 @@ create an EC2 instance
 
 ec2.png
 
+to update Ubuntu, run:
+
+sudo apt update
+
+and to upgrade Ubuntu, run:
+
+sudo apt upgrade
+
+sudoaptupdate.png 
+
+to get the location of node.js run: 
+
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+
+curlnodejs.png
+
+install node.js with the command below ; this command will install both nodejs and npm
+
+sudo apt-get install -y nodejs
+
+to verify the node installation, run command below:
+
+node -v
+
+to verify npm installation, run command below:
+
+npm -v
+
+you will create a new directory for your To-Do project; run command below
+
+mkdir Todo
+
+mkdirtodo.png
+
+change the current directory by running the command; cd Todo 
+
+Next is to use the command npm init to initialise the project so that a new file named package.json wil be created
+
+npm init
