@@ -278,4 +278,58 @@ open the postman and create aPOST request to the API : http://<PublicIP-or-Publi
 
 You can also create a GET request to your API on: http://<PublicIP-or-PublicDNS>:5000/api/todos    
 
+we will create a new folder in the todo directory called client. run:
+
+npx create-react-app client
+
+there are some dependencies that need to be indtalled.
+
+install concurrently. used to run more than one command simultaneously from the same terminal window
+
+npm install concurrently --save-dev
+
+concurrently.png 
+
+install nodeman. this is used to run and monitor the server
+
+npm install nodemon --save-dev
+
+nodeman.png
+
+In Todo folder open the package.json file, populate it with the code below:
+
+"scripts": {
+    "start": "node index.js",
+    "start-watch": "nodemon index.js",
+    "dev": "concurrently \"npm run start-watch\" \"cd client && npm start\""
+    },
+    
+change directory to client ; cd client. Open the package.json file; vi package.json file 
+
+add the key valuepair in the package.json file;  "proxy": "http://localhost:5000" 
+
+in the todo directory, run: npm run dev
+
+npmrundev.png 
+
+Your app should open and start running on localhost:3000
+
+port3000.png 
+
+to create our react components, from our todo directory, run: cd client; move to src directory, cd src
+
+Inside your src folder create another folder called components, mkdir components, move into the components directory; cd components
+
+Inside components directory create three files Input.js, ListTodo.js and Todo.js, run; touch Input.js ListTodo.js Todo.js
+
+populate Input.js by the code provided
+
+to make use of axios, move to src folder and clients folder by running the command: cd .. 
+
+install axios in the clients folder by running the command; npm install axios
+
+axios.png 
+
+go to the components directory by running, cd src/components 
+
 
