@@ -168,3 +168,114 @@ const Todo = mongoose.model('todo', TodoSchema);
 
 module.exports = Todo;
 
+Now we need to update our routes from the file api.js in routes directory to make use of the new model.
+
+open api.js with vim api.js and delete the code inside with :%d, paste the code below into it then save and exit.
+
+const express = require ('express');
+const router = express.Router();
+const Todo = require('../models/todo');
+
+router.get('/todos', (req, res, next) => {
+
+//this will return all the data, exposing only the id and action field to the client
+Todo.find({}, 'action')
+.then(data => res.json(data))
+.catch(next)
+});
+
+router.post('/todos', (req, res, next) => {
+if(req.body.action){
+Todo.create(req.body)
+.then(data => res.json(data))
+.catch(next)
+}else {
+res.json({
+error: "The input field is empty"
+})
+}
+});
+
+router.delete('/todos/:id', (req, res, next) => {
+Todo.findOneAndDelete({"_id": req.params.id})
+.then(data => res.json(data))
+.catch(next)
+})
+
+module.exports = router;
+
+vimapijs.png 
+
+In order to store our data, we require a database. To fulfill this need, we have decided to utilize mLab, a service that offers MongoDB database as a service (DBaaS) solution. mLab will provide us with the necessary infrastructure to store and manage our data effectively.
+
+sign up for MongoDB
+
+mongodb2.png 
+
+Create a file in your Todo directory and name it .env.: touch .env 
+
+open the file: vi .env and populate into it :
+
+DB = 'mongodb+srv://<username>:<password>@<network-address>/<dbname>?retryWrites=true&w=majority'
+
+mongodb1.png 
+
+Now we need to update the index.js to reflect the use of .env so that Node.js can connect to the database.
+
+delete the existing content in the file, and update it with the entire code below.
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const routes = require('./routes/api');
+const path = require('path');
+require('dotenv').config();
+
+const app = express();
+
+const port = process.env.PORT || 5000;
+
+//connect to the database
+mongoose.connect(process.env.DB, { useNewUrlParser: true, useUnifiedTopology: true })
+.then(() => console.log(`Database connected successfully`))
+.catch(err => console.log(err));
+
+//since mongoose promise is depreciated, we overide it with node's promise
+mongoose.Promise = global.Promise;
+
+app.use((req, res, next) => {
+res.header("Access-Control-Allow-Origin", "\*");
+res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+next();
+});
+
+app.use(bodyParser.json());
+
+app.use('/api', routes);
+
+app.use((err, req, res, next) => {
+console.log(err);
+next();
+});
+
+app.listen(port, () => {
+console.log(`Server running on port ${port}`)
+});
+
+start the server using the command: node index.js; You shall see a message Database connected successfully.
+
+nodeindexjs.png 
+
+Up until now, we have successfully developed the backend portion of our To-Do application and set up a database. However, we still lack a frontend user interface (UI). To address this, we require ReactJS code to create the desired UI. During the development process, it is crucial to test our code using a RESTful API. Therefore, we will need to utilize an API development client to facilitate this testing.
+
+we installed Postman to test our API
+
+postman1.png 
+
+postman2.png 
+
+open the postman and create aPOST request to the API : http://<PublicIP-or-PublicDNS>:5000/api/todos
+
+You can also create a GET request to your API on: http://<PublicIP-or-PublicDNS>:5000/api/todos    
+
+
